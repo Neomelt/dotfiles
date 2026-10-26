@@ -20,3 +20,14 @@ chezmoi init --apply git@github.com:Neomelt/dotfiles.git
 ```
 
 > The age key (`~/.config/chezmoi/age-key.txt`) is not included — keep it backed up separately.
+
+## Sync changes
+
+After editing a config file, sync it to the repo and push:
+
+```bash
+chezmoi re-add ~/.config/hypr/hyprland.lua   # sync one file
+chezmoi cd                                   # enter repo directory
+lg                                           # commit with lazygit (or git add -A && git commit && git push)
+exit
+```
