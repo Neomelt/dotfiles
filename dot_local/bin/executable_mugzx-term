@@ -1,0 +1,8 @@
+#!/bin/sh
+# The desktop's terminal: kitty in single-instance mode, so new windows open
+# almost instantly; foot if kitty is not installed. Arguments run as a
+# command in the new window, e.g. `mugzx-term htop`.
+if command -v kitty >/dev/null 2>&1; then
+  exec kitty --single-instance "$@"
+fi
+exec foot "$@"

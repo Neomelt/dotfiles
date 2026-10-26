@@ -1,0 +1,16 @@
+# Colours match the desktop palette; kitty ships Nerd Font symbols for the icons.
+gui:
+  nerdFontsVersion: "3"
+  border: rounded
+  showRandomTip: false
+  theme:
+    activeBorderColor: ["#8fb8ff", bold]
+    inactiveBorderColor: ["#3a4660"]
+    searchingActiveBorderColor: ["#9ad89a", bold]
+    optionsTextColor: ["#8fb8ff"]
+    selectedLineBgColor: ["#1c2738"]
+    inactiveViewSelectedLineBgColor: ["#161c27"]
+    cherryPickedCommitFgColor: ["#8fb8ff"]
+    cherryPickedCommitBgColor: ["#2b3950"]
+    unstagedChangesColor: ["#eb7a7a"]
+    defaultFgColor: [default]

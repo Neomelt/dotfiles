@@ -1,0 +1,5 @@
+#!/bin/sh
+# Usage: snap [name]   (default: YYYY-MM-DD)
+name="${1:-$(date +%Y-%m-%d)}"
+dest="/.snapshots/$name"
+sudo btrfs subvolume snapshot -r / "$dest" && echo "snapshot → $dest"

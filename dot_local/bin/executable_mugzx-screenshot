@@ -1,0 +1,39 @@
+#!/bin/sh
+# Region or full-screen screenshot with annotation (satty).
+# The annotated image is saved to ~/Pictures/Screenshots and copied to the
+# clipboard. Press Enter in satty to copy+save and close.
+set -u
+
+dir="$HOME/Pictures/Screenshots"
+mkdir -p "$dir"
+file="$dir/$(date +%Y%m%d-%H%M%S).png"
+tmp="${XDG_RUNTIME_DIR:-/tmp}/mugzx-shot-$$.png"
+
+case "${1:-region}" in
+  full)
+    grim "$tmp" || exit 1
+    ;;
+  region)
+    geom=$(slurp) || exit 0
+    grim -g "$geom" "$tmp" || exit 1
+    ;;
+  *)
+    echo "usage: $0 [region|full]" >&2
+    exit 2
+    ;;
+esac
+
+if command -v satty >/dev/null 2>&1; then
+  satty --filename "$tmp" --output-filename "$file" \
+        --copy-command wl-copy --save-after-copy \
+        --actions-on-enter save-to-clipboard --early-exit copy
+  rm -f "$tmp"
+  if [ -f "$file" ]; then
+    notify-send "截图已保存" "$file" 2>/dev/null || true
+  fi
+else
+  cp "$tmp" "$file"
+  rm -f "$tmp"
+  wl-copy --type image/png < "$file" 2>/dev/null || true
+  notify-send "截图已保存" "$file" 2>/dev/null || true
+fi

@@ -1,0 +1,11 @@
+#!/bin/sh
+# SUPER+C: the Quickshell clipboard history, or a wofi list when the shell is not running.
+set -u
+shell="$HOME/.config/quickshell/mugzx"
+if out=$(/usr/bin/qs ipc -p "$shell" call clipboard toggle 2>&1) \
+    && ! printf '%s' "$out" | grep -q 'not found'; then
+  exit 0
+fi
+command -v cliphist >/dev/null 2>&1 || exit 1
+choice=$(cliphist list | /usr/bin/wofi --dmenu --prompt "剪贴板" 2>/dev/null) || exit 0
+[ -n "$choice" ] && printf '%s\n' "$choice" | cliphist decode | wl-copy

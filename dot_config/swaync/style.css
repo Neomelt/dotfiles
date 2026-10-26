@@ -1,0 +1,36 @@
+/* mugzx: SwayNC in the same palette as the Quickshell bar and panels
+   (see ~/.config/quickshell/mugzx/Theme.qml). Loads the stock theme and
+   only overrides colours, radius and font. */
+@import url("file:///etc/xdg/swaync/style.css");
+
+:root {
+  /* translucent: Hyprland blurs behind swaync's layers */
+  --cc-bg: rgba(8, 11, 16, 0.80);
+  --noti-border-color: rgba(143, 184, 255, 0.20);
+  --noti-bg: 14, 18, 26;
+  --noti-bg-alpha: 0.82;
+  --noti-bg-darker: rgb(11, 14, 20);
+  --noti-bg-hover: rgb(26, 32, 44);
+  --noti-bg-focus: rgba(143, 184, 255, 0.10);
+  --noti-close-bg: rgba(255, 255, 255, 0.08);
+  --noti-close-bg-hover: rgba(255, 255, 255, 0.16);
+  --text-color: rgb(232, 237, 245);
+  --text-color-disabled: rgb(93, 102, 118);
+  --bg-selected: rgb(143, 184, 255);
+  --border-radius: 14px;
+  --font-size-body: 13px;
+  --font-size-summary: 14px;
+}
+
+* {
+  font-family: "Noto Sans CJK SC", sans-serif;
+}
+
+.control-center {
+  border: 1px solid var(--noti-border-color);
+}
+
+.widget-title > label,
+.widget-dnd > label {
+  font-size: 1.1rem;
+}

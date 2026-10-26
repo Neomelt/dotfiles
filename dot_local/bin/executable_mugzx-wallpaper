@@ -1,0 +1,15 @@
+#!/bin/sh
+# Animated anime wallpaper with awww (successor of swww).
+set -u
+img="$HOME/Pictures/Wallpapers/anime-girls.gif"
+[ -f "$img" ] || img="$HOME/Pictures/Wallpapers/anime-girls.jpg"
+
+if ! pgrep -x awww-daemon >/dev/null 2>&1; then
+  setsid /usr/bin/awww-daemon > /tmp/awww.log 2>&1 &
+  sleep 1.5
+fi
+
+# Show the still frame immediately; the animated GIF takes longer to decode.
+static="$HOME/Pictures/Wallpapers/anime-girls.jpg"
+[ -f "$static" ] && awww img "$static" >/dev/null 2>&1 || true
+awww img "$img" > /tmp/awww-set.log 2>&1 || true

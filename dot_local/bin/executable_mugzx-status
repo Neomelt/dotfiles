@@ -1,0 +1,23 @@
+#!/bin/sh
+# Print the state of the Hyprland desktop shell. Run this from a terminal if
+# the bar or wallpaper is missing after logging in.
+set -u
+
+echo "== session =="
+echo "XDG_CURRENT_DESKTOP=${XDG_CURRENT_DESKTOP:-<unset>}"
+echo "WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-<unset>}"
+echo "HYPRLAND_INSTANCE_SIGNATURE=${HYPRLAND_INSTANCE_SIGNATURE:-<unset>}"
+
+echo
+echo "== processes =="
+pgrep -a quickshell 2>/dev/null || pgrep -a qs 2>/dev/null || echo "quickshell: not running"
+pgrep -a hyprpaper 2>/dev/null || echo "hyprpaper: not running"
+pgrep -a swaync 2>/dev/null || echo "swaync: not running"
+
+echo
+echo "== layer surfaces =="
+hyprctl layers 2>/dev/null | grep -E 'Monitor|hyprpaper|mugzx-shell' || echo "hyprctl layers failed"
+
+echo
+echo "== startup log (last 25 lines) =="
+tail -25 "${XDG_STATE_HOME:-$HOME/.local/state}/mugzx-startup.log" 2>/dev/null || echo "no startup log yet"

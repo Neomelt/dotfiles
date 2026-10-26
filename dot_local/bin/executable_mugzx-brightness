@@ -1,0 +1,37 @@
+#!/bin/sh
+# Brightness control through logind, so it works without root, without the
+# video group, and without an extra udev rule.
+set -u
+
+case "${1:-}" in
+  up|down) ;;
+  *) echo "usage: $0 up|down" >&2; exit 2 ;;
+esac
+
+dev=""
+for d in /sys/class/backlight/*; do
+  [ -d "$d" ] || continue
+  dev=$(basename "$d")
+  break
+done
+[ -n "$dev" ] || exit 1
+
+max=$(cat "/sys/class/backlight/$dev/max_brightness") || exit 1
+cur=$(cat "/sys/class/backlight/$dev/brightness") || exit 1
+
+step=$((max / 20))
+[ "$step" -lt 1 ] && step=1
+
+case "$1" in
+  up)   new=$((cur + step)) ;;
+  down) new=$((cur - step)) ;;
+esac
+
+[ "$new" -lt 1 ] && new=1
+[ "$new" -gt "$max" ] && new=$max
+
+busctl call org.freedesktop.login1 /org/freedesktop/login1/session/auto \
+  org.freedesktop.login1.Session SetBrightness ssu backlight "$dev" "$new" >/dev/null
+
+# On-screen indicator; does nothing when the shell is not running.
+/usr/bin/qs ipc -p "$HOME/.config/quickshell/mugzx" call osd brightness >/dev/null 2>&1 &

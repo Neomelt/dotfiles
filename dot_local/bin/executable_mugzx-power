@@ -1,0 +1,20 @@
+#!/bin/sh
+# Power menu. Opens the bar's floating power panel; if the Quickshell shell is
+# not running (e.g. it crashed), fall back to a wofi menu.
+set -u
+
+shell="$HOME/.config/quickshell/mugzx"
+if out=$(/usr/bin/qs ipc -p "$shell" call panels toggle power 2>&1) \
+    && ! printf '%s' "$out" | grep -q 'not found'; then
+  exit 0
+fi
+
+choice=$(printf '%s\n' "Lock" "Logout" "Reboot" "Shutdown" \
+  | /usr/bin/wofi --dmenu --prompt "Power" --width 200 --height 230 2>/dev/null)
+
+case "$choice" in
+  Lock)     exec /home/neomelt/.local/bin/lock-and-sleep ;;
+  Logout)   exec /usr/bin/hyprctl dispatch 'hl.dsp.exit()' ;;
+  Reboot)   exec /usr/bin/systemctl reboot ;;
+  Shutdown) exec /usr/bin/systemctl poweroff ;;
+esac

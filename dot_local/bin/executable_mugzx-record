@@ -1,0 +1,33 @@
+#!/bin/sh
+# Toggle screen recording of the currently focused monitor (video + system
+# audio) with wf-recorder. Press the same key again to stop.
+set -u
+
+dir="$HOME/Videos/Recordings"
+mkdir -p "$dir"
+
+if pgrep -x wf-recorder >/dev/null 2>&1; then
+  pkill -INT -x wf-recorder
+  notify-send "录屏已停止" "文件在 $dir" 2>/dev/null || true
+  exit 0
+fi
+
+name=$(hyprctl monitors -j 2>/dev/null | python3 -c 'import sys,json
+print(next(x["name"] for x in json.load(sys.stdin) if x["focused"]))' 2>/dev/null)
+[ -n "$name" ] || name=eDP-1
+
+sink=$(pactl get-default-sink 2>/dev/null || true)
+file="$dir/$(date +%Y%m%d-%H%M%S).mp4"
+
+if [ -n "$sink" ]; then
+  wf-recorder -o "$name" -a"${sink}.monitor" -f "$file" > /tmp/mugzx-record.log 2>&1 &
+else
+  wf-recorder -o "$name" -f "$file" > /tmp/mugzx-record.log 2>&1 &
+fi
+
+sleep 1
+if pgrep -x wf-recorder >/dev/null 2>&1; then
+  notify-send "录屏开始" "$file" 2>/dev/null || true
+else
+  notify-send "录屏失败" "$(tail -n1 /tmp/mugzx-record.log 2>/dev/null)" 2>/dev/null || true
+fi

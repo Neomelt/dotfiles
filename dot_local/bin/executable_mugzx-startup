@@ -1,0 +1,55 @@
+#!/bin/sh
+set -u
+
+# Only the Hyprland session owns the Quickshell desktop shell.
+case "${XDG_CURRENT_DESKTOP:-}" in
+  Hyprland|Hyprland:*) ;;
+  *) exit 0 ;;
+esac
+
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}"
+RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+LOG="$STATE_DIR/mugzx-startup.log"
+mkdir -p "$STATE_DIR"
+
+# Keep a log of every login so a missing bar can be diagnosed later.
+exec >>"$LOG" 2>&1
+printf '\n=== %s mugzx-startup desktop=%s display=%s\n' "$(date -Is)" "${XDG_CURRENT_DESKTOP:-}" "${WAYLAND_DISPLAY:-}"
+
+# Hyprland exports its IPC signature just after exec-once is scheduled.
+i=0
+while [ "$i" -lt 100 ]; do
+  sig="${HYPRLAND_INSTANCE_SIGNATURE:-}"
+  if [ -n "$sig" ] && [ -S "$RUNTIME_DIR/hypr/$sig/.socket.sock" ]; then
+    break
+  fi
+  i=$((i + 1))
+  sleep 0.1
+done
+
+# Dynamic wallpaper: awww + animated anime GIF (see mugzx-wallpaper).
+/home/neomelt/.local/bin/mugzx-wallpaper &
+
+# Notification daemon. Swaync can fail to take the notification name while a
+# KDE session is still shutting down; that is harmless on a fresh login.
+if ! pgrep -x swaync >/dev/null 2>&1; then
+  /usr/bin/swaync &
+fi
+
+# Polkit agent: without it pkexec and GUI authentication prompts fail in Hyprland.
+if ! pgrep -f 'polkit-kde-authentication-agent-1' >/dev/null 2>&1; then
+  /usr/lib/polkit-kde-authentication-agent-1 &
+fi
+
+# Clipboard history for SUPER+C (text and images).
+if command -v cliphist >/dev/null 2>&1 && ! pgrep -f 'wl-paste --type text --watch cliphist' >/dev/null 2>&1; then
+  wl-paste --type text --watch cliphist store &
+  wl-paste --type image --watch cliphist store &
+fi
+
+# Kill an instance of this shell that survived a previous graphical session.
+# Starting with `-n` (no-duplicate) used to make the new login exit silently
+# when such a stale instance existed, leaving no bar at all.
+timeout 2s /usr/bin/qs kill -c mugzx >/dev/null 2>&1 || true
+
+exec /usr/bin/qs -p "$HOME/.config/quickshell/mugzx" --log-times

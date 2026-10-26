@@ -1,0 +1,5 @@
+#!/bin/sh
+# Show the Hyprland cheat sheet. Bound to F1 and run inside mugzx-term.
+cat "$HOME/.config/hypr/KEYBINDS.md"
+printf '\n按回车关闭...'
+read _ 2>/dev/null || true
