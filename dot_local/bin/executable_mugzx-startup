@@ -47,6 +47,17 @@ if command -v cliphist >/dev/null 2>&1 && ! pgrep -f 'wl-paste --type text --wat
   wl-paste --type image --watch cliphist store &
 fi
 
+# QQ copies into the X11 clipboard, which Hyprland ignores while a Wayland
+# window has focus; mugzx-x11-clipboard forwards those copies to Wayland.
+if [ -n "${DISPLAY:-}" ]; then
+  (
+    while pgrep -x Hyprland >/dev/null 2>&1; do
+      /home/neomelt/.local/bin/mugzx-x11-clipboard
+      sleep 5
+    done
+  ) &
+fi
+
 # Kill an instance of this shell that survived a previous graphical session.
 # Starting with `-n` (no-duplicate) used to make the new login exit silently
 # when such a stale instance existed, leaving no bar at all.

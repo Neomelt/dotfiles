@@ -1,0 +1,83 @@
+#!/usr/bin/python3 -I
+# Forward X11 (Xwayland) clipboard changes to the Wayland clipboard: Hyprland only syncs them while an X11 window has focus, and QQ writes its copies there.
+import fcntl
+import hashlib
+import os
+import subprocess
+import sys
+
+os.environ["GDK_BACKEND"] = "x11"
+
+import gi
+
+gi.require_version("Gdk", "3.0")
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gdk, Gtk
+
+TEXT_TARGETS = {"UTF8_STRING", "text/plain;charset=utf-8", "text/plain", "STRING", "TEXT"}
+IMAGE_TARGETS = ("image/png", "image/jpeg")
+TEXT_MIME = "text/plain;charset=utf-8"
+
+last_forwarded = None
+
+
+def wayland_clipboard(mime):
+    try:
+        return subprocess.run(["wl-paste", "--no-newline", "--type", mime],
+                              capture_output=True, timeout=2).stdout
+    except subprocess.TimeoutExpired:
+        return None
+
+
+def forward(mime, data):
+    global last_forwarded
+    key = (mime, hashlib.sha256(data).digest())
+    if key == last_forwarded:
+        return
+    last_forwarded = key
+    # Hyprland mirrors Wayland copies into X11 when an X11 window is focused; don't bounce those back.
+    if wayland_clipboard(mime) == data:
+        return
+    # Without --type wl-copy also offers the text aliases (UTF8_STRING, text/plain, ...).
+    cmd = ["wl-copy"] if mime == TEXT_MIME else ["wl-copy", "--type", mime]
+    subprocess.run(cmd, input=data, timeout=5)
+
+
+def on_text(_clipboard, text, *_):
+    if text:
+        forward(TEXT_MIME, text.encode())
+
+
+def on_image(_clipboard, selection, mime):
+    data = selection.get_data() if selection else None
+    if data:
+        forward(mime, data)
+
+
+def on_targets(clipboard, atoms, *_):
+    names = {atom.name() for atom in atoms or []}
+    if names & TEXT_TARGETS:
+        clipboard.request_text(on_text)
+        return
+    for mime in IMAGE_TARGETS:
+        if mime in names:
+            clipboard.request_contents(Gdk.Atom.intern(mime, False), on_image, mime)
+            return
+
+
+def main():
+    runtime = os.environ.get("XDG_RUNTIME_DIR", "/tmp")
+    lock = open(os.path.join(runtime, "mugzx-x11-clipboard.lock"), "w")
+    fcntl.flock(lock, fcntl.LOCK_EX)
+
+    ok, _ = Gtk.init_check(sys.argv)
+    if not ok:
+        sys.exit("mugzx-x11-clipboard: cannot open the X11 display")
+
+    clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+    clipboard.connect("owner-change", lambda cb, _event: cb.request_targets(on_targets))
+    Gtk.main()
+
+
+if __name__ == "__main__":
+    main()
