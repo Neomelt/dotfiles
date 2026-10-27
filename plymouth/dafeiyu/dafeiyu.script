@@ -1,0 +1,160 @@
+// DeepSeek 大肥鱼 Plymouth theme
+
+Window.SetBackgroundTopColor(0.031, 0.043, 0.063);
+Window.SetBackgroundBottomColor(0.031, 0.043, 0.063);
+
+screen_width  = Window.GetWidth();
+screen_height = Window.GetHeight();
+
+frame[1]   = Image("frame-001.png");
+frame[2]   = Image("frame-002.png");
+frame[3]   = Image("frame-003.png");
+frame[4]   = Image("frame-004.png");
+frame[5]   = Image("frame-005.png");
+frame[6]   = Image("frame-006.png");
+frame[7]   = Image("frame-007.png");
+frame[8]   = Image("frame-008.png");
+frame[9]   = Image("frame-009.png");
+frame[10]  = Image("frame-010.png");
+frame[11]  = Image("frame-011.png");
+frame[12]  = Image("frame-012.png");
+frame[13]  = Image("frame-013.png");
+frame[14]  = Image("frame-014.png");
+frame[15]  = Image("frame-015.png");
+frame[16]  = Image("frame-016.png");
+frame[17]  = Image("frame-017.png");
+frame[18]  = Image("frame-018.png");
+frame[19]  = Image("frame-019.png");
+frame[20]  = Image("frame-020.png");
+frame[21]  = Image("frame-021.png");
+frame[22]  = Image("frame-022.png");
+frame[23]  = Image("frame-023.png");
+frame[24]  = Image("frame-024.png");
+frame[25]  = Image("frame-025.png");
+frame[26]  = Image("frame-026.png");
+frame[27]  = Image("frame-027.png");
+frame[28]  = Image("frame-028.png");
+frame[29]  = Image("frame-029.png");
+frame[30]  = Image("frame-030.png");
+frame[31]  = Image("frame-031.png");
+frame[32]  = Image("frame-032.png");
+frame[33]  = Image("frame-033.png");
+frame[34]  = Image("frame-034.png");
+frame[35]  = Image("frame-035.png");
+frame[36]  = Image("frame-036.png");
+frame[37]  = Image("frame-037.png");
+frame[38]  = Image("frame-038.png");
+frame[39]  = Image("frame-039.png");
+frame[40]  = Image("frame-040.png");
+frame[41]  = Image("frame-041.png");
+frame[42]  = Image("frame-042.png");
+frame[43]  = Image("frame-043.png");
+frame[44]  = Image("frame-044.png");
+frame[45]  = Image("frame-045.png");
+frame[46]  = Image("frame-046.png");
+frame[47]  = Image("frame-047.png");
+frame[48]  = Image("frame-048.png");
+frame[49]  = Image("frame-049.png");
+frame[50]  = Image("frame-050.png");
+frame[51]  = Image("frame-051.png");
+frame[52]  = Image("frame-052.png");
+frame[53]  = Image("frame-053.png");
+frame[54]  = Image("frame-054.png");
+frame[55]  = Image("frame-055.png");
+frame[56]  = Image("frame-056.png");
+frame[57]  = Image("frame-057.png");
+frame[58]  = Image("frame-058.png");
+frame[59]  = Image("frame-059.png");
+frame[60]  = Image("frame-060.png");
+frame[61]  = Image("frame-061.png");
+frame[62]  = Image("frame-062.png");
+frame[63]  = Image("frame-063.png");
+frame[64]  = Image("frame-064.png");
+frame[65]  = Image("frame-065.png");
+frame[66]  = Image("frame-066.png");
+frame[67]  = Image("frame-067.png");
+frame[68]  = Image("frame-068.png");
+frame[69]  = Image("frame-069.png");
+frame[70]  = Image("frame-070.png");
+frame[71]  = Image("frame-071.png");
+frame[72]  = Image("frame-072.png");
+frame[73]  = Image("frame-073.png");
+frame[74]  = Image("frame-074.png");
+frame[75]  = Image("frame-075.png");
+frame[76]  = Image("frame-076.png");
+frame[77]  = Image("frame-077.png");
+frame[78]  = Image("frame-078.png");
+frame[79]  = Image("frame-079.png");
+frame[80]  = Image("frame-080.png");
+frame[81]  = Image("frame-081.png");
+frame[82]  = Image("frame-082.png");
+frame[83]  = Image("frame-083.png");
+frame[84]  = Image("frame-084.png");
+frame[85]  = Image("frame-085.png");
+frame[86]  = Image("frame-086.png");
+frame[87]  = Image("frame-087.png");
+frame[88]  = Image("frame-088.png");
+frame[89]  = Image("frame-089.png");
+frame[90]  = Image("frame-090.png");
+frame[91]  = Image("frame-091.png");
+frame[92]  = Image("frame-092.png");
+frame[93]  = Image("frame-093.png");
+frame[94]  = Image("frame-094.png");
+frame[95]  = Image("frame-095.png");
+frame[96]  = Image("frame-096.png");
+frame[97]  = Image("frame-097.png");
+frame[98]  = Image("frame-098.png");
+frame[99]  = Image("frame-099.png");
+frame[100] = Image("frame-100.png");
+frame[101] = Image("frame-101.png");
+frame[102] = Image("frame-102.png");
+frame[103] = Image("frame-103.png");
+frame[104] = Image("frame-104.png");
+frame[105] = Image("frame-105.png");
+frame[106] = Image("frame-106.png");
+frame[107] = Image("frame-107.png");
+frame[108] = Image("frame-108.png");
+frame[109] = Image("frame-109.png");
+frame[110] = Image("frame-110.png");
+
+num_frames = 110;
+
+anim = Sprite();
+anim.SetPosition(
+    Math.Int((screen_width  - 200) / 2),
+    Math.Int((screen_height - 200) / 2),
+    1
+);
+
+// Progress bar
+bar_h = 2;
+bar_y = screen_height - 40;
+bar_bg_img = Image.New(screen_width, bar_h);
+bar_bg_img.Fill(0.12, 0.16, 0.24, 1.0);
+bar_bg = Sprite(bar_bg_img);
+bar_bg.SetPosition(0, bar_y, 1);
+
+bar_sprite = Sprite();
+bar_sprite.SetPosition(0, bar_y, 2);
+
+current_frame = 1;
+progress = 0.0;
+
+fun refresh_callback() {
+    anim.SetImage(frame[current_frame]);
+    current_frame++;
+    if (current_frame > num_frames) current_frame = 1;
+
+    w = Math.Int(screen_width * progress);
+    if (w < 1) w = 1;
+    bar_img = Image.New(w, bar_h);
+    bar_img.Fill(0.36, 0.56, 0.96, 1.0);
+    bar_sprite.SetImage(bar_img);
+}
+
+fun boot_progress_callback(duration, progress_val) {
+    progress = progress_val;
+}
+
+Plymouth.SetRefreshFunction(refresh_callback);
+Plymouth.SetBootProgressFunction(boot_progress_callback);

@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=dafeiyu
+Description=DeepSeek 大肥鱼
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/dafeiyu
+ScriptFile=/usr/share/plymouth/themes/dafeiyu/dafeiyu.script
