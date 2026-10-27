@@ -16,7 +16,11 @@ Personal Hyprland desktop configuration managed with [chezmoi](https://www.chezm
 ## Install
 
 ```bash
+# 1. Apply dotfiles
 chezmoi init --apply git@github.com:Neomelt/dotfiles.git
+
+# 2. Install packages, Plymouth theme, and snapper
+bash ~/.local/share/chezmoi/install.sh
 ```
 
 > The age key (`~/.config/chezmoi/age-key.txt`) is not included — keep it backed up separately.
